@@ -26,5 +26,7 @@ class DatabaseConnection():
         return jsonify(result)
 
     def insert(self,collectionName,document):
+        action = "Inserting one document into {}".format(collectionName)
+        print(action)
         self.db[collectionName].insert_one(document)
-        return 
+        return True
