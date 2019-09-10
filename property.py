@@ -2,11 +2,8 @@ from database import DatabaseConnection
 from flask import jsonify
 class Property(object):
 
-    def __init__(self, name, propertyType, price):
-        self.name = name
-        self.type = propertyType
-        self.price = price
-        self.db = DatabaseConnection("airbnblite")
+    def __init__(self):
+        self.db = DatabaseConnection()
 
     def save(self):
         document = {
@@ -15,3 +12,12 @@ class Property(object):
             "price": self.price
         }
         self.db.insert("properties", document)
+
+    def create(self, name, propertyType, price):
+        self.name = name
+        self.type = propertyType
+        self.price = price
+    
+    @staticmethod
+    def get(self, id):
+        return self.db.findOne("properties", {"_id": id})

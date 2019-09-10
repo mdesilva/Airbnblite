@@ -3,17 +3,16 @@ from flask import jsonify
 
 class DatabaseConnection():
 
-    def __init__(self,dbName):
+    def __init__(self):
         client = MongoClient('localhost', 27017)
-        self.db = client[dbName]
+        self.db = client["airbnblite"]
 
     def findOne(self,collectionName,query):
         collection = self.db[collectionName]
         result = collection.find_one(query, {'_id':0})
         action = "Get for {}".format(collectionName)
         print(action)
-        #print(result)
-        return jsonify(result)
+        return result
     
     def findAll(self,collectionName):
         collection = self.db[collectionName]

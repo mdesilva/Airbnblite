@@ -5,19 +5,28 @@ from flask_pymongo import PyMongo
 from database import DatabaseConnection
 from bson.objectid import ObjectId
 from property import Property
+from UserController import UserController
 app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = 'airbnblite'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/airbnblite'
 
 mongo = PyMongo(app)
+db = DatabaseConnection()
 
-db = DatabaseConnection('airbnblite')
+UserController = UserController()
+@app.route('/user/signup', methods=['POST'])
+def signupUser():
+    return UserController.signup(request.form)
+
+@app.route('/user/login', methods=['POST'])
+def loginUser():
+    return UserController.login(request.form)
 
 @app.route('/properties/<string:id>', methods=['GET'])
 def getById(id):
     #An ObjectId is not the same as its string representation
-    return db.findOne("properties",{"_id": ObjectId(id)})
+    return Property.get(ObjectId(id))
 
 @app.route('/properties', methods=['GET'])
 def getAll():
@@ -26,7 +35,8 @@ def getAll():
 @app.route('/properties', methods=['POST'])
 def addNewProperty():
     print(request.form)
-    newProperty = Property(request.form['name'], request.form['type'], request.form['price'])
+    newProperty = Property()
+    newProperty.create(request.form['name'], request.form['type'], request.form['price'])
     newProperty.save()
     return Response(status=200)
 
