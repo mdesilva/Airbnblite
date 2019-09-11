@@ -29,7 +29,6 @@ class UserController(Controller):
         print("User account created for " + userDocument['firstName'])
         return Response(status=200)
 
-    
     def login(self, request):
         username = request['username']
         password = request['password']
@@ -44,4 +43,3 @@ class UserController(Controller):
             return response
         else:
             return Response(status=403)
-    

@@ -10,6 +10,8 @@ class DatabaseConnection():
     def appendToObject(self, cursor):
         result = []
         for row in cursor:
+            if row['_id']:
+                row['_id'] = str(row['_id'])
             result.append(row)
         return result
 
@@ -19,10 +21,10 @@ class DatabaseConnection():
         action = "Get for {}".format(collectionName)
         print(action)
         return result
-    
+
     def findMany(self, collectionName, query):
         collection = self.db[collectionName]
-        cursor = collection.find(query, {'_id':0})
+        cursor = collection.find(query)
         result = self.appendToObject(cursor)
         return result
 
@@ -30,9 +32,9 @@ class DatabaseConnection():
         action = "Get all documents for {}".format(collectionName)
         print(action)
         collection = self.db[collectionName]
-        cursor = collection.find({},{'_id':0})
+        cursor = collection.find({})
         result = self.appendToObject(cursor)
-        return jsonify(result)
+        return result
 
     def insert(self,collectionName,document):
         action = "Inserting one document into {}".format(collectionName)

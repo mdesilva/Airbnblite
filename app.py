@@ -1,9 +1,8 @@
-from flask import Flask
-from flask import jsonify
-from flask import request, Response
+from flask import Flask, jsonify, request, Response
 from flask_pymongo import PyMongo
 from database import DatabaseConnection
 from bson.objectid import ObjectId
+from SessionService import SessionService
 from UserController import UserController
 from PropertyController import PropertyController
 
@@ -17,6 +16,7 @@ db = DatabaseConnection()
 
 UserController = UserController()
 PropertyController = PropertyController()
+SessionService = SessionService()
 
 @app.route('/user/signup', methods=['POST'])
 def signupUser():
@@ -26,6 +26,7 @@ def signupUser():
 def loginUser():
     return UserController.login(request.form)
 
+# Authenticated Routes
 @app.route('/properties/<string:id>', methods=['GET'])
 def getById(id):
     #An ObjectId is not the same as its string representation
@@ -42,6 +43,12 @@ def addNewProperty():
 @app.route('/properties/rent', methods=['POST'])
 def rentProperty():
     return PropertyController.rentProperty(request.form)
+
+@app.route('/theRequestIs', methods=['GET', 'POST'])
+@SessionService.isUserLoggedIn()
+def theRequestIs():
+    return Response("Take a look at the server", content_type="text/html")
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=4000, debug=True)
