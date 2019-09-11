@@ -11,7 +11,7 @@ class UserController(Controller):
     last name,
     email address as their username,
     password,
-    account type (buyer/vendor),
+    account type (renter/vendor),
     """
     def signup(self, request):
         #assume that all fields have been submitted in the correct format
@@ -22,7 +22,8 @@ class UserController(Controller):
             "firstName": request['firstName'],
             "lastName" : request['lastName'],
             "username": request['username'],
-            "password": encryptedPassword.hexdigest()
+            "password": encryptedPassword.hexdigest(),
+            "accountType": request['accountType']
         }
         self.db.insert("users", userDocument)
         print("User account created for " + userDocument['firstName'])
