@@ -2,7 +2,7 @@ from Controller import Controller
 from database import DatabaseConnection
 from flask import Response
 import hashlib #to encrypt and decrypt user passwords
-import uuid #to generate unique session ids
+
 class UserController(Controller):
 
     """
@@ -28,18 +28,3 @@ class UserController(Controller):
         self.db.insert("users", userDocument)
         print("User account created for " + userDocument['firstName'])
         return Response(status=200)
-
-    def login(self, request):
-        username = request['username']
-        password = request['password']
-        user = self.db.findOne('users', {'username': username})
-        encryptedPassword = hashlib.sha256()
-        encryptedPassword.update(password.encode('UTF-8'))
-        if (encryptedPassword.hexdigest() == user['password']):
-            sessionId = str(uuid.uuid4())
-            response = Response()
-            response.set_cookie("sessionId", sessionId)
-            self.db.insert("sessions",{"username": username, "sid": sessionId})
-            return response
-        else:
-            return Response(status=403)

@@ -1,5 +1,5 @@
 from database import DatabaseConnection
-import hashlib #to encrypt and decrypt user passwords
+import hashlib 
 
 class UserService():
 
