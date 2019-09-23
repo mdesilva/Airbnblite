@@ -1,4 +1,4 @@
-from Controller import Controller
+from Controllers.Controller import Controller
 from database import DatabaseConnection
 from flask import Response
 import hashlib #to encrypt and decrypt user passwords
@@ -6,7 +6,7 @@ import hashlib #to encrypt and decrypt user passwords
 class UserController(Controller):
 
     """
-    Request to register new users will have their 
+    Request to register new users will have
     first name,
     last name,
     email address as their username,

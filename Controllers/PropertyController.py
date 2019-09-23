@@ -1,6 +1,7 @@
-from Controller import Controller
-from PropertyService import PropertyService
+from Controllers.Controller import Controller
+from Services.PropertyService import PropertyService
 from flask import Response, jsonify
+from bson.objectid import ObjectId
 
 class PropertyController(Controller):
     
@@ -34,9 +35,17 @@ class PropertyController(Controller):
     def rentProperty(self, request):
         propertyId = request['propertyId']
         renter = request['renter']
-        self.db.update("properties", {'_id': propertyId}, {'renter': renter})
+        self.db.update("properties", {'_id': ObjectId(propertyId)}, {'$set': {"renter": renter}})
         return Response(status=200)
     
     def getAllAvailableProperties(self):
         properties = self.db.findMany("properties", {'renter': ""})
         return jsonify(properties)
+
+    def getVendorProperties(self, owner):
+        userProperties = self.db.findMany("properties", {'owner': owner})
+        return jsonify(userProperties)
+
+    def getRenterProperties(self, renter):
+        rentedPropertiesByUser = self.db.findMany("properties", {'renter': renter})
+        return jsonify(rentedPropertiesByUser)

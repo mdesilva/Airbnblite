@@ -14,12 +14,17 @@ class UserService():
             return False
     
     def authenticate(self, request):
+        print(request)
+        return True
         username = request['username']
         password = request['password']
         user = self.db.findOne(self.collection, {'username': username})
         encryptedPassword = hashlib.sha256()
         encryptedPassword.update(password.encode('UTF-8'))
         if (encryptedPassword.hexdigest() == user['password']):
+            print("User " + username + " authenticated")
             return True
         else:
+            print("User " + username +  " provided incorrect credentials")
             return False
+        
